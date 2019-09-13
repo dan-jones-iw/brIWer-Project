@@ -1,0 +1,12 @@
+1. As a user, I want to use a command-line application that will output a predefined list of the names of the people in my team as well as a list of the drinks 
+that people in my team typically ask for, so that I can remember everybody’s names and see if all of the drinks are available to make.
+2. As a user, I want to invoke the application and get a list of the people in my team as well as the available drinks
+E.g. $ python3 app.py get-people
+3. As a user, I want a nicer, interactive menu to use the application, so that I don’t have to be remembering and typing out commands all the time
+4. As a user, I want to add new drinks and people to the app so that I can keep the app up-to-date, in case people leave or join the team, or new drinks are available
+5. As a user, I want to be able to store the favourite drink of everyone in my team, so I know what to get them when they ask for a drink.
+6. As a user, I want to be able to save all the drinks and people names I’ve entered in the app so that I don’t have to re-enter them every time I restart the app
+7. Create a sensible directory structure for your project
+8. As a brewer person I want to be able to create a brew round so my teammates can submit brew requests so that I know who wants a drink. 
+The application should know what drink they want based on their preferences and what drink they requested
+9. As a brewer person I want to be able to assign myself to the round so that people know it is me who is making the drinks
