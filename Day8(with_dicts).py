@@ -15,16 +15,18 @@ def main_menu():
         choice = int(input(logo_ascii + main_menu_message))
         inner_menu = True
         while inner_menu == True:
-            people = populate_list("people.txt")
-            drinks = populate_list("drinks.txt")
+            people_dictionary = get_dict_from_file("people.txt")
+            people_list = get_list_from_dict(people_dictionary)
+            drinks_dictionary = get_dict_from_file("people.txt")
+            drinks_list = get_list_from_dict(drinks_dictionary)
             if choice == 1:
-                list_menu(inner_menu, people, drinks)
+                list_menu(inner_menu, people_list, drinks_list)
                 inner_menu = False
             elif choice == 2:
-                add_menu(inner_menu, people, drinks)
+                add_menu(inner_menu, people_list, drinks_list)
                 inner_menu = False
             elif choice == 3:
-                remove_menu(inner_menu, people, drinks)
+                remove_menu(inner_menu, people_list, drinks_list)
                 inner_menu = False
             elif choice == 4:
                 create_round_menu()
@@ -35,7 +37,7 @@ def main_menu():
             clear()
             print(error_message)
 
-def list_menu(inner_menu, people, drinks):
+def list_menu(inner_menu, people_list, drinks_list):
     menu = inner_menu
     while menu == True:
         clear()
@@ -43,7 +45,7 @@ def list_menu(inner_menu, people, drinks):
             choice = int(input(logo_ascii + list_menu_message))
         except:
             print("Please type a number!")
-        view_list(choice, people, drinks)
+        view_list(choice, people_list, drinks_list)
         if choice == 1 or choice == 2:
             input("\nPress Enter to return to the previous menu.")
         elif choice == 3:
@@ -52,12 +54,12 @@ def list_menu(inner_menu, people, drinks):
             clear()
             print(error_message)
 
-def add_menu(inner_menu, people, drinks):
+def add_menu(inner_menu, people_list, drinks_list):
     menu = inner_menu
     while menu == True:
         clear()
         choice = int(input(logo_ascii + add_menu_message))
-        add_an_item(choice, people, drinks)
+        add_an_item(choice, people_list, drinks_list)
         if choice == 1 or choice == 2:
             input("\nPress Enter to return to the previous menu.")
         elif choice == 3:
@@ -66,12 +68,12 @@ def add_menu(inner_menu, people, drinks):
             clear()
             print(error_message)
 
-def remove_menu(inner_menu, people, drinks):
+def remove_menu(inner_menu, people_list, drinks_list):
     menu = inner_menu
     while menu == True:
         clear()
         choice = int(input(logo_ascii + remove_menu_message))
-        remove_an_item(choice, people, drinks)
+        remove_an_item(choice, people_list, drinks_list)
         if choice == 1 or choice == 2:
             input("\nPress Enter to return to the previous menu.")
         elif choice == 3:
@@ -107,15 +109,15 @@ def print_list(arg, list_name):
         print("| " + item + f"{' ' * spaces}" + "|")
     print(f"+{'=' * 18}+")
 
-def view_list(choice, people, drinks):    
+def view_list(choice, people_list, drinks_list):    
     clear()
     print(logo_ascii)
     if  choice == 1:
-        arg = people
+        arg = people_list
         list_name = "people"
         print_list(arg, list_name)
     elif choice == 2:
-        arg = drinks
+        arg = drinks_list
         list_name = "drinks"
         print_list(arg, list_name)
     elif choice == 3:
@@ -132,64 +134,68 @@ def input_cleaner(input_str):
         word_list[index] = word
     return word_list
         
-def add_an_item(choice, people, drinks):
+def add_an_item(choice, people_list, drinks_list):
     if choice == 1:
         clear()
         print(logo_ascii + "\n")
-        add_name_message(people)
+        add_name_message(people_list)
         added_names = input()
         added_names = input_cleaner(added_names)
-        people += added_names
-        append_to_file("people.txt", people)
+        people_list += added_names
+        people_dictionary = create_dict_key(people_list)
+        save_by_rewrite("people.txt", people_dictionary)
         clear()
         print(logo_ascii)
         print("Name added!\n")
         print("The current list of people is: \n")
-        print(people)
+        print(people_list)
     elif choice == 2:
         clear()
         print(logo_ascii + "\n")
-        add_drink_message(drinks)
+        add_drink_message(drinks_list)
         added_drinks = input()
         added_drinks = input_cleaner(added_drinks)
-        drinks += added_drinks
-        append_to_file("people.txt", drinks)
+        drinks_list += added_drinks
+        drinks_dictionary = create_dict_key(drinks_list)
+        save_by_rewrite("people.txt", drinks_dictionary)
         clear()
         print(logo_ascii)
         print("Drink added!\n")
         print("The current list of drinks is: \n")
-        print(drinks)
+        print(drinks_list)
     elif choice == 3:
         pass
     else:
         print(error_message)
 
-def remove_an_item(choice, people, drinks):
+def remove_an_item(choice, people_list, drinks_list):
     try:
         if choice == 1:
             clear()
             print(logo_ascii + "\n")
-            remove_name_message(people)
+            remove_name_message(people_list)
             removed_names = input()
-            people.remove(removed_names)
-            save_by_rewrite("people.txt", people)
+            people_list.remove(removed_names)
+            people_dictionary = create_dict_key(people_list)
+            save_by_rewrite("people.txt", people_dictionary)
             clear()
             print(logo_ascii)
             print("Name removed!\n")
             print("The updated list of people is: \n")
-            print(people)
+            print(people_list)
         elif choice == 2:
             clear()
             print(logo_ascii + "\n")
-            remove_drink_message(drinks)
+            remove_drink_message(drinks_list)
             removed_drinks = input()
-            people.remove(removed_drinks)
-            save_by_rewrite("drinks.txt", drinks)
+            drinks_list.remove(removed_drinks)
+            drinks_dictionary = create_dict_key(drinks_list)
+            save_by_rewrite("drinks.txt", drinks_dictionary)
             clear()
             print(logo_ascii)
             print("Drink removed!\n")
             print("The updated list of drinks is: \n")
-            print(drinks)
+            print(drinks_list)
         elif choice == 3:
             pass
         else:
@@ -203,38 +209,46 @@ def remove_an_item(choice, people, drinks):
         print(" " + str(e))
         print(f"+{'=' * (error_length)}+")
 
-def populate_list(filepath):
-    list_of_items = []
+def get_dict_from_file(filepath):
+    dictionary_of_items = {}
     try:
         with open(filepath, 'r') as items_file:
             for lines in items_file.readlines():
-                list_of_items.append(lines.strip("\n"))
+                list_from_file = []
+                list_from_file.append(lines.strip("\n"))
+                for item in list_from_file:
+                    key = item.rstrip("|")
+                    value = item.lstrip("|")
+                    dictionary_of_items[key] = [value]
             items_file.close()
-            return list_of_items
+            return dictionary_of_items
     except:
         print("Failed to open file!")
 
-def save_by_rewrite(filepath, list_of_items):
+def get_list_from_dict(dictionary_of_items):
+    list_of_items = []
+    for key, value in dictionary_of_items:
+        list_of_items.append(value)
+    return list_of_items
+
+def save_by_rewrite(filepath, dictionary_of_items):
     try:
+        list_from_dict = []
+        for key, value in dictionary_of_items:
+            list_from_dict.append(key + "|" + value)
         with open(filepath, 'w') as items_file:
-            for item in list_of_items:
-                items_file.write(item + "\n")
-    except:
-        print("Failed to open file!")
-    
-def append_to_file(filepath, list_of_items):
-    try:
-        with open(filepath, 'w') as items_file:
-            for item in list_of_items:
+            for item in list_from_dict:
                 items_file.write(item + "\n")
     except:
         print("Failed to open file!")
 
-# for i, v in enumerate([list_of_items])
+# for i, v in enumerate([list_from_file])
 
 #IMPORT INFORMATION FROM TEXT FILE
-people = populate_list("people.txt")
-drinks = populate_list("drinks.txt")
+people_dictionary = get_dict_from_file("people.txt")
+people_list = get_list_from_dict(people_dictionary)
+drinks_dictionary = get_dict_from_file("people.txt")
+drinks_list = get_list_from_dict(drinks_dictionary)
 
 #MESSAGES & DESIGN
 logo_ascii = """
@@ -283,18 +297,18 @@ add_menu_message = f"""\n--- ADD TO A LIST ---\n\n{menu_thanks_message}Please ch
     [3] Exit to main menu
 \n"""
 
-def add_name_message(people):
+def add_name_message(people_list):
     print(f"""\n--- ADD A NAME ---\n\n{menu_thanks_message}Please type the name(s) of people you want to add to the list.\n
     Please make sure that each name is separated by a comma and a space when adding multiple people.
         e.g. Danny, Paul, Phil\n""")
-    print_list(people, "people")
+    print_list(people_list, "people")
     print("""\nEnter name here: """)
 
-def add_drink_message(drinks):
+def add_drink_message(drinks_list):
     print(f"""\n--- ADD A DRINK ---\n\n{menu_thanks_message}Please type the drink(s) which you would like to add to the list.\n
     Please make sure that each drink is separated by a comma and a space when adding multiple drinks.
         e.g. Beer, Water, Mocha\n""")
-    print_list(drinks, "drinks")
+    print_list(drinks_list, "drinks")
     print("""\nEnter drink here: """)
 
 remove_menu_message = f"""\n--- REMOVE AN ITEM ---\n\n{menu_thanks_message}Please choose an option from the below menu:\n
@@ -303,14 +317,14 @@ remove_menu_message = f"""\n--- REMOVE AN ITEM ---\n\n{menu_thanks_message}Pleas
     [3] Exit to main menu
 \n"""
 
-def remove_name_message(people):
+def remove_name_message(people_list):
     print(f"""\n--- REMOVE A NAME ---\n\n{menu_thanks_message}Please type a name to remove it from the current the list of people.""")
-    print_list(people, "people")
+    print_list(people_list, "people")
     print("""\n\nEnter name here: """)
 
-def remove_drink_message(drinks):
+def remove_drink_message(drinks_list):
     print(f"""\n--- REMOVE A DRINK ---\n\n{menu_thanks_message}Please type a drink to remove it from the current the list of drinks.""")
-    print_list(drinks, "drinks")
+    print_list(drinks_list, "drinks")
     print("""\n\nEnter drink here: """)
 
 main_menu()

@@ -11,80 +11,80 @@ import traceback
 def main_menu():
     main_menu = True
     while main_menu == True:
-        clear()
-        choice = int(input(logo_ascii + main_menu_message))
-        inner_menu = True
-        while inner_menu == True:
-            people = populate_list("people.txt")
-            drinks = populate_list("drinks.txt")
-            if choice == 1:
-                list_menu(inner_menu, people, drinks)
-                inner_menu = False
-            elif choice == 2:
-                add_menu(inner_menu, people, drinks)
-                inner_menu = False
-            elif choice == 3:
-                remove_menu(inner_menu, people, drinks)
-                inner_menu = False
-            elif choice == 4:
-                create_round_menu()
-            elif choice == 5:
-                end_thanks()
-                exit()
-        else:
+        try:
             clear()
-            print(error_message)
+            choice = int(input(logo_ascii + main_menu_message))
+            inner_menu = True
+            while inner_menu == True:
+                people = populate_list("people.txt")
+                drinks = populate_list("drinks.txt")
+                if choice == 1:
+                    list_menu(inner_menu, people, drinks)
+                    inner_menu = False
+                elif choice == 2:
+                    add_menu(inner_menu, people, drinks)
+                    inner_menu = False
+                elif choice == 3:
+                    remove_menu(inner_menu, people, drinks)
+                    inner_menu = False
+                elif choice == 4:
+                    create_round_menu()
+                    inner_menu = False
+                elif choice == 5:
+                    end_thanks()
+                    exit()
+        except:
+            clear()
+            input(logo_ascii + "\n" + "Please type a number! Press Enter to return to the menu.")
 
 def list_menu(inner_menu, people, drinks):
     menu = inner_menu
     while menu == True:
-        clear()
-        try:  
+        try:
+            clear() 
             choice = int(input(logo_ascii + list_menu_message))
+            view_list(choice, people, drinks)
+            if choice == 1 or choice == 2:
+                input("\nPress Enter to return to the previous menu.")
+            elif choice == 3:
+                menu = False
         except:
-            print("Please type a number!")
-        view_list(choice, people, drinks)
-        if choice == 1 or choice == 2:
-            input("\nPress Enter to return to the previous menu.")
-        elif choice == 3:
-            menu = False
-        else:
             clear()
-            print(error_message)
+            input(logo_ascii + "\n" + "Please type a number! Press Enter to return to the menu.")
 
 def add_menu(inner_menu, people, drinks):
     menu = inner_menu
     while menu == True:
-        clear()
-        choice = int(input(logo_ascii + add_menu_message))
-        add_an_item(choice, people, drinks)
-        if choice == 1 or choice == 2:
-            input("\nPress Enter to return to the previous menu.")
-        elif choice == 3:
-            menu = False
-        else:
+        try:
             clear()
-            print(error_message)
+            choice = int(input(logo_ascii + add_menu_message))
+            add_an_item(choice, people, drinks)
+            if choice == 1 or choice == 2:
+                input("\nPress Enter to return to the previous menu.")
+            elif choice == 3:
+                menu = False
+        except:
+            clear()
+            input(logo_ascii + "\n" + "Please type a number! Press Enter to return to the menu.")
 
 def remove_menu(inner_menu, people, drinks):
     menu = inner_menu
     while menu == True:
-        clear()
-        choice = int(input(logo_ascii + remove_menu_message))
-        remove_an_item(choice, people, drinks)
-        if choice == 1 or choice == 2:
-            input("\nPress Enter to return to the previous menu.")
-        elif choice == 3:
-            menu = False
-        else:
+        try:
             clear()
-            print(error_message)
+            choice = int(input(logo_ascii + remove_menu_message))
+            remove_an_item(choice, people, drinks)
+            if choice == 1 or choice == 2:
+                input("\nPress Enter to return to the previous menu.")
+            elif choice == 3:
+                menu = False
+        except:
+            clear()
+            input(logo_ascii + "\n" + "Please type a number! Press Enter to return to the menu.")
 
+#Use createRound class.
 def create_round_menu():
     return
-
-def exit_to_menu():
-    pass
 
 def clear():
     os.system("clear")
@@ -140,7 +140,7 @@ def add_an_item(choice, people, drinks):
         added_names = input()
         added_names = input_cleaner(added_names)
         people += added_names
-        append_to_file("people.txt", people)
+        rewrite_file("people.txt", people)
         clear()
         print(logo_ascii)
         print("Name added!\n")
@@ -153,7 +153,7 @@ def add_an_item(choice, people, drinks):
         added_drinks = input()
         added_drinks = input_cleaner(added_drinks)
         drinks += added_drinks
-        append_to_file("people.txt", drinks)
+        rewrite_file("people.txt", drinks)
         clear()
         print(logo_ascii)
         print("Drink added!\n")
@@ -172,7 +172,7 @@ def remove_an_item(choice, people, drinks):
             remove_name_message(people)
             removed_names = input()
             people.remove(removed_names)
-            save_by_rewrite("people.txt", people)
+            rewrite_file("people.txt", people)
             clear()
             print(logo_ascii)
             print("Name removed!\n")
@@ -184,7 +184,7 @@ def remove_an_item(choice, people, drinks):
             remove_drink_message(drinks)
             removed_drinks = input()
             people.remove(removed_drinks)
-            save_by_rewrite("drinks.txt", drinks)
+            rewrite_file("drinks.txt", drinks)
             clear()
             print(logo_ascii)
             print("Drink removed!\n")
@@ -214,15 +214,7 @@ def populate_list(filepath):
     except:
         print("Failed to open file!")
 
-def save_by_rewrite(filepath, list_of_items):
-    try:
-        with open(filepath, 'w') as items_file:
-            for item in list_of_items:
-                items_file.write(item + "\n")
-    except:
-        print("Failed to open file!")
-    
-def append_to_file(filepath, list_of_items):
+def rewrite_file(filepath, list_of_items):
     try:
         with open(filepath, 'w') as items_file:
             for item in list_of_items:
