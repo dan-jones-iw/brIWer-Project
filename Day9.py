@@ -1,12 +1,12 @@
 import sys
-arguments = sys.argv
-print(arguments)
-
 import os
 import time
 import traceback
+arguments = sys.argv
+print(arguments)
 
-#FUNCTIONS
+# FUNCTIONS
+
 
 def main_menu():
     main_menu = True
@@ -196,44 +196,53 @@ def add_an_item(choice, people, drinks):
     else:
         print(error_message)
 
+
+def file_error_handler(exception):
+    clear()
+    error_length = len(str(exception))
+    print(logo_ascii)
+    print("There has been an error!\n")
+    print(f"+{'=' * error_length}+")
+    print(" " + str(exception))
+    print(f"+{'=' * error_length}+")
+
+
+# THIS STINKS ----- not anymore :)
 def remove_an_item(choice, people, drinks):
-    try:
-        if choice == 1:
-            clear()
-            print(logo_ascii + "\n")
-            remove_name_message(people)
-            removed_names = input()
-            people.remove(removed_names)
-            rewrite_file("people.txt", people)
-            clear()
-            print(logo_ascii)
-            print("Name removed!\n")
-            print("The updated list of people is: \n")
-            print(people)
-        elif choice == 2:
-            clear()
-            print(logo_ascii + "\n")
-            remove_drink_message(drinks)
-            removed_drinks = input()
-            people.remove(removed_drinks)
-            rewrite_file("drinks.txt", drinks)
-            clear()
-            print(logo_ascii)
-            print("Drink removed!\n")
-            print("The updated list of drinks is: \n")
-            print(drinks)
-        elif choice == 3:
-            pass
-        else:
-            print(error_message)
-    except Exception as e:
+    if choice == 1:
         clear()
-        error_length = len(str(e))
+        print(logo_ascii + "\n")
+        remove_name_message(people)
+        removed_names = input()
+        people.remove(removed_names)
+        try:
+            rewrite_file("people.txt", people)
+        except FileNotFoundError as e:
+            file_error_handler(e)
+        clear()
         print(logo_ascii)
-        print("There has been an error!\n")
-        print(f"+{'=' * (error_length)}+")
-        print(" " + str(e))
-        print(f"+{'=' * (error_length)}+")
+        print("Name removed!\n")
+        print("The updated list of people is: \n")
+        print(people)
+    elif choice == 2:
+        clear()
+        print(logo_ascii + "\n")
+        remove_drink_message(drinks)
+        removed_drinks = input()
+        people.remove(removed_drinks)
+        try:
+            rewrite_file("drinks.txt", drinks)
+        except FileNotFoundError as e:
+            file_error_handler(e)
+        clear()
+        print(logo_ascii)
+        print("Drink removed!\n")
+        print("The updated list of drinks is: \n")
+        print(drinks)
+    elif choice == 3:
+        pass
+    else:
+        print(error_message)
 
 def populate_list(filepath):
     list_of_items = []
